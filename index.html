@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Study Track</title>
+<style>
+:root{--bg:#f5f6f8;--card:#fff;--text:#161a20;--mute:#667085;--line:#e3e6eb;--acc:#3b82f6;--accT:#fff;--ok:#16a34a;--bad:#dc2626;--cell:#e9ecf1;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12161c;--card:#1b212a;--text:#e8ecf2;--mute:#8d97a6;--line:#2a323d;--acc:#5b9cff;--accT:#0b1220;--ok:#34d399;--bad:#f87171;--cell:#262e39;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#12161c;--card:#1b212a;--text:#e8ecf2;--mute:#8d97a6;--line:#2a323d;--acc:#5b9cff;--accT:#0b1220;--ok:#34d399;--bad:#f87171;--cell:#262e39;color-scheme:dark}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{display:flex;justify-content:space-between;align-items:center;padding:14px 16px 6px;max-width:1200px;margin:auto}
+h1{font-size:20px;margin:0}h2{font-size:16px;margin:0 0 10px}
+nav{display:flex;gap:6px;padding:6px 16px;max-width:1200px;margin:auto;overflow-x:auto}
+nav button{flex:0 0 auto;min-width:110px;white-space:nowrap}
+main{max-width:1200px;margin:auto;padding:8px 16px 40px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
+button,input,select{font:inherit;color:var(--text);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+button{cursor:pointer}button.p,nav button.on,.seg button.on{background:var(--acc);color:var(--accT);border-color:var(--acc)}
+button.d{color:var(--bad)}input,select{max-width:100%}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.mute{color:var(--mute);font-size:13px}.big{font-size:40px;font-weight:700;font-variant-numeric:tabular-nums}
+.bar{height:10px;background:var(--cell);border-radius:6px;overflow:hidden}.bar i{display:block;height:100%;background:var(--acc);width:0}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.stat b{display:block;font-size:22px}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}.cal div{aspect-ratio:1;border-radius:8px;background:var(--cell);display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer}
+.cal .h{background:none;aspect-ratio:auto;color:var(--mute);cursor:default}.cal .sel{outline:2px solid var(--text)}
+.li{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-top:1px solid var(--line)}
+.bars{display:flex;gap:6px;align-items:flex-end;height:110px}.bars div{flex:1;text-align:center;font-size:11px;color:var(--mute)}.bars i{display:block;background:var(--acc);border-radius:5px 5px 0 0;min-height:2px}
+.seg{display:flex;gap:6px}.seg button{flex:1}
+.g7{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center}.g7 input{width:100%;padding:6px;text-align:center}
+.hide{display:none}
+@media(max-width:520px){.grid{grid-template-columns:repeat(2,1fr)}}
+.fc{display:flex;flex-direction:column;gap:10px;margin:14px 0}#aErr{color:var(--bad);min-height:20px;font-size:13px}
+.msg{max-width:80%;padding:8px 12px;border-radius:12px;background:var(--cell);word-break:break-word}.msg.me{align-self:flex-end;background:var(--acc);color:var(--accT)}.msg small{display:block;opacity:.7;font-size:11px}
+.rx{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}.rx button{padding:1px 8px;font-size:13px;border-radius:999px;background:var(--card);color:var(--text)}.rx button.on{border-color:var(--text);font-weight:600}
+.av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;flex:none}.dot{width:9px;height:9px;border-radius:50%;background:var(--ok);display:inline-block;animation:pl 1.4s infinite}@keyframes pl{50%{opacity:.3}}.tag{font-size:11px;border:1px solid var(--line);border-radius:999px;padding:1px 8px;color:var(--mute)}
+.bg{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}.bd{border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}.bd.u{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc)}.bd .ic{font-size:30px;line-height:1.2}.bd.l .ic{filter:grayscale(1);opacity:.35}.bd b{display:block;font-size:13px}.bd .mute{font-size:11px}.bd .bar{height:6px;margin-top:6px}
+section:not(.hide){display:grid;grid-template-columns:repeat(auto-fit,minmax(min(340px,100%),1fr));gap:14px;align-items:start}section>.card{margin:0}section>.wide{grid-column:1/-1}
+#t-today:not(.hide){display:block;max-width:760px;margin:0 auto}#t-today>.card{margin-bottom:14px}
+nav{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--line)}
+nav button{display:flex;align-items:center;justify-content:center;gap:6px}
+.card{box-shadow:0 1px 2px rgba(0,0,0,.05)}button:hover{border-color:var(--acc)}
+:is(button,input,select):focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+#t-today:not(.hide){display:flex;flex-direction:column;gap:14px}#t-today>.card{margin-bottom:0}
+#t-today>.card:nth-child(3){order:1}#t-today>.card:nth-child(4){order:2}#t-today>.card:nth-child(5){order:3}#t-today>.card:nth-child(6){order:4}#t-today>.card:nth-child(1){order:5}#t-today>.card:nth-child(2){order:6}
+#t-today>.card:nth-child(1){order:0}
+@media(max-width:640px){nav{position:fixed;top:auto;bottom:0;left:0;right:0;max-width:none;margin:0;border-bottom:0;border-top:1px solid var(--line);padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));justify-content:space-around;overflow:visible}
+ nav button{flex:1;min-width:0;flex-direction:column;gap:0;font-size:11px;padding:6px 2px}nav .ni{font-size:19px;line-height:1.1}main{padding-bottom:96px}h1{font-size:18px}}
+#live{display:flex;gap:10px;overflow-x:auto;padding:4px 0}
+#live .li{flex:1 0 170px;flex-direction:column;align-items:center;text-align:center;border:1px solid var(--line);border-radius:12px;padding:12px;gap:8px}
+#live .li>.row{flex-direction:column;align-items:center;gap:6px}#live .li>div:last-child{text-align:center!important}#live .rx{justify-content:center!important}
+textarea{font:inherit;color:var(--text);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:8px 12px;width:100%;resize:vertical}
+.lab{display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;color:var(--mute)}.lab select,.lab input,.lab textarea{width:100%;font-weight:400;color:var(--text)}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:8px}.f3{display:grid;grid-template-columns:1fr 1fr 110px auto;gap:12px;align-items:end;margin-bottom:10px}
+.ringw{display:flex;justify-content:center;margin:8px 0 16px}.ring{--p:0;width:200px;height:200px;border-radius:50%;background:conic-gradient(var(--acc) calc(var(--p)*1%),var(--cell) 0);display:flex;align-items:center;justify-content:center}
+.ringin{width:158px;height:158px;border-radius:50%;background:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}.ringin b:first-child{font-size:28px}
+#t-today:not(.hide){display:grid;grid-template-columns:minmax(260px,340px) 1fr;gap:14px;max-width:1200px;margin:0 auto;align-items:start}
+#t-today>.card:nth-child(1){grid-column:1/-1;grid-row:1}#t-today>.card:nth-child(3){grid-column:1;grid-row:2/4}#t-today>.card:nth-child(4){grid-column:2;grid-row:2}#t-today>.card:nth-child(5){grid-column:2;grid-row:3}#t-today>.card:nth-child(6){grid-column:1/-1;grid-row:4}#t-today>.card:nth-child(2){grid-column:1/-1;grid-row:5}
+@media(max-width:760px){#t-today:not(.hide){display:flex;flex-direction:column}.f2{grid-template-columns:1fr}.f3{grid-template-columns:1fr 1fr}}
+#t-today>.card:nth-child(3){grid-row:2;align-self:stretch}#t-today>.card:nth-child(4){grid-row:2;align-self:stretch}#t-today>.card:nth-child(5){grid-column:1/-1;grid-row:3}
+#cBox{position:relative}
+.pill{position:absolute;z-index:30;display:flex;align-items:center;gap:2px;padding:6px 12px;background:var(--card);border:1px solid var(--line);border-radius:32px;box-shadow:0 10px 28px rgba(0,0,0,.2);max-width:calc(100% - 16px);overflow-x:auto}.pill.hide{display:none}
+#eQuick{display:flex}#eQuick button{border:0;background:none;font-size:28px;line-height:1.2;padding:4px 7px;border-radius:50%;transition:transform .12s}#eQuick button:hover{transform:scale(1.3)}
+.pill .sep{width:1px;height:34px;background:var(--line);margin:0 8px;flex:none}#eMore{border:0;background:none;padding:4px 8px;color:var(--mute);display:flex}#eMore:hover{color:var(--text)}
+#eFull{flex-wrap:wrap;gap:8px;padding:12px;border-radius:20px;width:340px}#eFull>.mute{width:100%}#eFull .row{width:100%;margin:0;flex-wrap:nowrap}
+header#top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px 16px}
+.hp{border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:13px;display:flex;align-items:center;gap:8px;background:var(--card)}.hs{border-radius:14px;flex-direction:column;align-items:stretch;gap:3px;min-width:150px}
+.hb,.hu,#hi{display:flex;align-items:center;gap:10px}.logo{width:38px;height:38px;border-radius:50%;background:var(--card);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:18px}
+#out{background:var(--text);color:var(--bg);border-radius:999px;border-color:var(--text)}
+nav button{background:none;border:1px solid transparent;color:var(--mute)}nav button.on{background:none;color:var(--text);border-color:var(--acc)}nav .ni{display:none}
+@media(max-width:640px){nav .ni{display:block}#hExam,#hLive{display:none}}
+.cal .xa{outline:2px dashed var(--mute);outline-offset:-2px}.cal .xm{outline:2px solid var(--bad);outline-offset:-2px;font-weight:700}.cal .sel.xa,.cal .sel.xm{box-shadow:0 0 0 2px var(--text)}
+.pod{display:flex;align-items:flex-end;justify-content:center;gap:12px;margin-top:22px}.pc{flex:1;max-width:210px;text-align:center}.pc .blk{border-radius:12px 12px 0 0;display:flex;align-items:flex-start;justify-content:center;padding-top:8px;font-size:28px;margin-top:8px}.pc .av{margin:0 auto}.pcw{display:flex;justify-content:center;margin-bottom:6px}
+@media(max-width:640px){nav button{font-size:10px}}
+.ban{display:flex;align-items:center;gap:12px;padding:10px 14px;border:1px solid var(--line);border-left:4px solid var(--ok);border-radius:12px;background:color-mix(in srgb,var(--ok) 10%,var(--card));margin-bottom:14px}
+#bSeg{flex:0 0 auto;width:auto}#bSeg button{flex:0 0 auto;border-radius:999px;padding:6px 14px}#bSeg button.on{background:var(--text);color:var(--bg);border-color:var(--text)}
+.pods{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-items:end;margin:18px 0}.pd{border:1px solid var(--line);border-radius:14px;padding:16px 10px 14px;text-align:center;background:var(--card);position:relative}
+.pd.p1{padding-top:24px;padding-bottom:20px;border-top:3px solid #d4a017;background:linear-gradient(var(--card),color-mix(in srgb,#d4a017 10%,var(--card)))}.pd .rk{position:absolute;left:12px;top:8px;color:var(--mute);font-size:11px;font-weight:700}
+.pd .big2{font-size:30px;font-weight:700;line-height:1.2;margin-top:6px}.pd small{font-size:12px;font-weight:400;color:var(--mute)}.pd .av{margin:0 auto}
+.lv{font-size:10px;padding:1px 7px;border-radius:999px;margin-left:6px;font-weight:600}
+.tbw{overflow:auto;max-height:560px;border:1px solid var(--line);border-radius:12px}.tb{width:100%;border-collapse:collapse;font-size:13px}.tb th{position:sticky;top:0;background:var(--cell);text-align:right;font-size:11px;letter-spacing:.05em;color:var(--mute);padding:10px 12px;white-space:nowrap}
+.tb th:nth-child(-n+2),.tb td:nth-child(-n+2){text-align:left}.tb td{padding:9px 12px;border-top:1px solid var(--line);text-align:right;white-space:nowrap}
+.gh{display:inline-block;min-width:46px;text-align:center;border-radius:999px;padding:2px 8px;font-weight:700;font-size:12px}.mb{display:inline-flex;align-items:flex-end;gap:2px;height:22px}.mb i{width:5px;border-radius:1px}
+@media(max-width:640px){.pods{grid-template-columns:1fr}.pd.p1{order:-1}}
+nav button[data-t="admin"]{display:none}body.adm nav button[data-t="admin"]{display:flex}
+.admp{display:none}.admp.show{display:block}.ast{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0}.ast>div{border:1px solid var(--line);border-radius:12px;padding:10px 14px}.ast b{display:block;font-size:22px}#admSeg{flex:0 1 auto}#t-admin .li{padding:10px 0}
+@media(max-width:640px){.ast{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div id="auth" style="padding:16px"><div class="card" style="max-width:380px;margin:10vh auto 0">
+<h1>📚 Study Track</h1><p class="mute">Sign in to see your study progress.</p>
+<div class="seg" id="aSeg"><button data-m="in" class="on">Sign in</button><button data-m="up">Create account</button></div>
+<div class="fc">
+<input id="aName" class="hide" placeholder="Your name" autocomplete="name">
+<input id="aEmail" type="email" placeholder="Email" autocomplete="email">
+<input id="aPw" type="password" placeholder="Password" autocomplete="current-password">
+<input id="aPw2" class="hide" type="password" placeholder="New password again" autocomplete="new-password">
+<button class="p" id="aGo">Sign in</button><div id="aErr"></div></div>
+<p class="mute">Accounts are saved on this device only, so they can't be used on another phone or computer, and a forgotten password can't be recovered. Use Export in Setup to back up your data.</p>
+<div style="text-align:center"><button id="aAdm" style="border:0;background:none;color:var(--mute);font-size:12px">🛡️ Admin login</button></div>
+<div id="admBox" class="hide fc"><input id="admPw" type="password" placeholder="Admin passcode" autocomplete="off"><button class="p" id="admGo">Unlock admin</button><div id="admErr" style="color:var(--bad);font-size:13px;min-height:18px"></div></div>
+</div></div>
+<div id="onb" class="hide" style="padding:16px"><div class="card" style="max-width:560px;margin:6vh auto 0">
+<h1>Choose your subjects</h1><p class="mute">Tap every subject you study. You can change this any time in Setup.</p>
+<input id="oQ" placeholder="Search subjects" style="width:100%">
+<div id="opk" style="max-height:50vh;overflow:auto;margin:8px 0"></div>
+<div class="row"><input id="oName" placeholder="Not on the list? Type one in" style="flex:1"><button id="oAdd">Add</button></div>
+<div class="row" style="justify-content:space-between"><span class="mute" id="oCnt"></span><button class="p" id="oGo">Continue</button></div>
+</div></div>
+<div id="app" class="hide">
+<header id="top">
+ <div class="hp" id="hPlan"></div>
+ <div class="hb"><div class="logo">📚</div><div><b style="font-size:17px">Study Track</b><div class="mute" id="hSub"></div></div></div>
+ <div class="hp" id="hExam"></div>
+ <div class="hp hs" id="hToday"></div>
+ <div class="hp" id="hLive"></div>
+ <div class="hu"><span id="hi"></span><button id="out">Sign out</button></div>
+</header>
+<nav id="nav"></nav>
+<main>
+
+<section id="t-today">
+ <div class="card"><div class="row" style="justify-content:space-between;margin-top:0"><h2 style="margin:0">Studying right now</h2><span><button class="kAll" style="padding:3px 10px;font-size:13px">👏 Kudos everyone</button> <span class="tag">Demo people</span></span></div><p class="mute" style="margin:4px 0">Live across the cohort. 3 shown here and 24 more studying. Timers update as they run.</p><div id="live"></div></div>
+ <div class="card"><div class="row" style="justify-content:space-between;margin-top:0"><h2 style="margin:0">Activity</h2><span><button class="kAll" style="padding:3px 10px;font-size:13px">👏 Kudos everyone</button> <span class="tag">Demo people</span></span></div><p class="mute" style="margin:4px 0">The latest sessions logged. Give kudos 👏 or call it sus 🤨.</p><div id="feed"></div></div>
+ <div class="card"><div class="row" style="justify-content:space-between"><h2 id="dayTitle">Today</h2><span class="mute" id="goalTxt"></span></div>
+  <div class="ringw"><div class="ring" id="ring"><div class="ringin"><b id="rTime">0h 0m</b><span class="mute" id="rOf"></span><b id="rPct" style="font-size:14px"></b></div></div></div>
+  
+  <div class="row"><label class="lab" style="flex:1">Goal for this day (hours)<input id="dayGoal" type="number" min="0" step="0.5"></label><button id="rstGoal">Reset</button></div><label class="lab" style="margin-top:8px">Logging for<input type="date" id="logDate"></label><p class="mute" id="doneTxt" style="margin:10px 0 0"></p>
+ </div>
+ <div class="card"><h2>Session timer</h2><div class="mute" style="margin:-6px 0 10px">You appear in Studying right now when you start.</div>
+  <div class="f2"><label class="lab">Subject<select id="tSub"></select></label><label class="lab">Area<select id="tArea"></select></label></div>
+  <div class="big" id="clock" style="text-align:center;font-size:56px">00:00:00</div><div class="mute" id="tStat" style="text-align:center">Nothing running</div>
+  <div class="row" style="justify-content:center"><button class="p" id="tStart">Start</button><button id="tPause">Pause</button><button id="tFin">Finish and log</button><button class="d" id="tDisc">Discard</button></div>
+ </div>
+ <div class="card"><h2>Log a block by hand</h2>
+  <div class="f3"><label class="lab">Subject<select id="mSub"></select></label><label class="lab">Area<select id="mArea"></select></label><label class="lab">Minutes<input id="mMin" type="number" min="1" placeholder="Minutes"></label><button class="p" id="mAdd">Add</button></div>
+  <div class="row"><span class="mute">Quick</span><button data-q="25">25</button><button data-q="45">45</button><button data-q="60">60</button><button data-q="90">90</button><button data-q="120">120</button></div>
+  <label class="lab">What did you do? (optional)<textarea id="mNote" rows="2" placeholder="e.g. Two body paragraphs under time."></textarea></label>
+ </div>
+ <div class="card wide"><h2>Logged this day</h2><div id="dayList"></div></div>
+</section>
+
+<section id="t-cal" class="hide">
+ <div class="card"><div class="row" style="justify-content:space-between"><button id="pm">‹</button><h2 id="mt" style="margin:0"></h2><button id="nm">›</button></div>
+  <p class="mute">Colour is how much of that day's goal you hit. Click a day to log it.</p><div class="cal" id="cal"></div></div>
+ <div class="card"><h2>Countdown</h2><div id="count"></div></div>
+ <div class="card wide"><div class="row" style="justify-content:space-between;margin-top:0"><h2 style="margin:0">HSC exam days 2026</h2><label class="mute"><input type="checkbox" id="exMine"> Only my subjects</label></div>
+  <p class="mute" style="margin:4px 0">Written exams run 13 Oct to 5 Nov. On the calendar, a <b style="color:var(--bad)">red outline</b> is a day you have an exam and a <b>dashed outline</b> is a day other subjects sit theirs. Times vary, so check NESA Students Online for your own timetable.</p>
+  <div class="row"><button id="exSet">Set exam dates on my subjects</button><button id="exIcs">Download calendar file (.ics)</button></div><div id="exList"></div></div>
+</section>
+
+<section id="t-stats" class="hide">
+ <div class="card grid wide">
+  <div class="stat"><b id="sTot">0</b><span class="mute">Total hours</span></div>
+  <div class="stat"><b id="sDays">0</b><span class="mute">Active days</span></div>
+  <div class="stat"><b id="sStreak">0</b><span class="mute">Day streak</span></div>
+  <div class="stat"><b id="sAvg">0</b><span class="mute">Avg / active day</span></div>
+ </div>
+ <div class="card wide"><div class="row" style="justify-content:space-between;margin-top:0"><h2 style="margin:0">Achievements</h2><span class="tag" id="achCnt"></span></div><div id="ach"></div></div>
+ <div class="card"><h2>Your last 7 days</h2><div class="bars" id="w7"></div></div>
+ <div class="card"><h2>Hours by subject</h2><div id="bySub"></div></div>
+ <div class="card"><h2>Hours by area</h2><div id="byArea"></div></div>
+ <div class="card wide"><h2>Session log</h2><div id="log"></div></div>
+</section>
+
+<section id="t-admin" class="hide">
+ <div class="card wide"><div class="row" style="justify-content:space-between;margin-top:0"><h2 style="margin:0">🛡️ Admin panel</h2><span class="tag" id="admMode"></span></div><p class="mute" style="margin:4px 0">Only you can see this. Pick a section below.</p><div class="ast" id="admStats"></div><div class="row" style="justify-content:space-between"><div class="seg" id="admSeg"><button data-s="chat">Chat</button><button data-s="mutes">Muted</button><button data-s="acc">Accounts</button><button data-s="bans">Banned</button></div><div class="row" style="margin:0"><button id="admRef">↻ Refresh</button><button id="admOut">Lock admin</button></div></div></div>
+ <div class="card wide admp" id="ap-chat"><div class="row" style="justify-content:space-between;margin-top:0"><h2 style="margin:0">Chat moderation</h2><button class="d" id="admClear">Clear all chat</button></div><p class="mute" style="margin:4px 0 8px">Newest first. Delete removes a message. Mute stops that person sending.</p><div id="admMsgs" style="max-height:460px;overflow:auto"></div></div>
+ <div class="card wide admp" id="ap-mutes"><h2>Muted people</h2><p class="mute" style="margin:4px 0 8px">These people cannot send chat messages until you unmute them.</p><div id="admMutes"></div></div>
+ <div class="card wide admp" id="ap-acc"><h2>Accounts</h2><p class="mute" style="margin:4px 0 8px">Accounts made on this device. Ban blocks sign-in. To ban any other email, type it here.</p><div class="row"><input id="admEm" type="email" placeholder="Ban by email" style="flex:1"><button class="d" id="admBanB">Ban</button></div><div id="admAcc"></div></div>
+ <div class="card wide admp" id="ap-bans"><h2>Banned accounts</h2><p class="mute" style="margin:4px 0 8px">These emails cannot sign in or sign up.</p><div id="admBans"></div></div>
+</section>
+<section id="t-board" class="hide">
+ <div class="card wide"><div id="susBan"></div><div class="row" style="justify-content:space-between;margin-top:0"><div><h2 style="margin:0">Leaderboard <span class="tag">Demo people</span></h2><div class="mute" id="bTxt"></div></div><div class="seg" id="bSeg"><button data-p="d" class="on">Day</button><button data-p="7">7 days</button><button data-p="30">30 days</button><button data-p="all">All time</button></div></div>
+  
+  <div id="bNav" class="row" style="justify-content:center;gap:18px"><button id="bPrev">‹</button><div style="text-align:center;min-width:160px"><b id="bDay"></b><div class="mute" id="bDate"></div></div><button id="bNext">›</button></div>
+  <div class="f2"><label class="lab">Subject<select id="bSub2"></select></label><label class="lab">Ranked by<select id="bRank"><option value="h">Hours</option><option value="s">Sessions</option><option value="a">Avg / day</option><option value="l">Longest day</option><option value="k">Streak</option></select></label></div>
+  <div id="podium"></div><div class="tbw"><table class="tb" id="btab"></table></div><div id="myRank" class="mute" style="text-align:center;margin-top:14px"></div></div>
+</section>
+<section id="t-chat" class="hide">
+ <div class="card wide" id="cSetup"><h2>Test mode</h2><p class="mute">Chat isn't connected to a shared database yet, so messages are only saved on this device and nobody else can see them. The site owner connects one by pasting a Supabase URL and key into the CHAT line near the top of the script in index.html.</p></div>
+ <div class="card wide" id="cBox"><h2>Cohort chat</h2><p class="mute">Everyone with the site link can read this. Be kind and don't share private details.</p>
+  <div id="cMsg" style="height:50vh;overflow:auto;display:flex;flex-direction:column;gap:8px"></div>
+  <div id="ePick" class="hide pill">
+   <div id="eQuick"></div><span class="sep"></span><button id="eMore" title="Any emoji"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 14a4 4 0 0 0 7 0"/><path d="M9 9.5h.01M15 9.5h.01"/><path d="M19 3v4M17 5h4"/></svg></button></div>
+  <div id="eFull" class="hide pill">
+   <div class="row"><input id="eIn" placeholder="Type or paste any emoji" style="flex:1"><button class="p" id="eAdd">React</button><button id="eX">✕</button></div>
+   <div class="mute">Open your emoji keyboard to use any emoji (Mac: Ctrl+Cmd+Space, Windows: Win+. , phones: the 😀 key).</div></div>
+  <div class="row"><input id="cIn" maxlength="500" placeholder="Message the cohort" style="flex:1"><button class="p" id="cSend">Send</button></div></div>
+</section>
+<section id="t-setup" class="hide">
+ <div class="card"><h2>Profile</h2><div class="row"><div id="pPrev"></div><div><label><button onclick="pImg.click()">Choose picture</button><input type="file" id="pImg" accept="image/*" class="hide"></label> <button id="pRm">Remove</button><div class="mute">Square images look best.</div></div></div>
+  <div class="row"><label class="mute">Border colour <input type="color" id="pCol" style="padding:2px;height:36px;width:56px"></label></div>
+  <div class="row"><input id="name" placeholder="Display name"><button class="p" id="saveName">Save</button></div></div>
+ <div class="card"><h2>Standing goals</h2><p class="mute">Hours per day. 0 is a rest day and never breaks your streak.</p>
+  <div class="g7" id="g7"></div>
+  <div class="row"><label class="mute">Fallback goal <input id="fb" type="number" min="0" step="0.5" style="width:80px"></label><button class="p" id="saveGoals">Save goals</button></div></div>
+ <div class="card wide"><h2>Subjects and areas</h2>
+  <h3 style="font-size:14px;margin:0 0 6px">Choose from the subject list</h3>
+  <input id="pkQ" placeholder="Search subjects" style="width:100%">
+  <div id="pk" style="max-height:280px;overflow:auto;margin:8px 0"></div>
+  <p class="mute">Not on the list? Type one in by hand</p>
+  <div class="row"><input id="nsName" placeholder="Subject"><label class="mute">Exam <input id="nsExam" type="date"></label><button class="p" id="nsAdd">Add subject</button></div>
+  <div id="subs"></div></div>
+ <div class="card"><h2>Backup</h2><div class="row"><button id="exp">Export my data</button><label><button onclick="imp.click()">Import</button><input type="file" id="imp" accept=".json" class="hide"></label></div>
+  <p class="mute">Data is stored in this browser only. Export to move it elsewhere.</p></div>
+ <div class="card"><h2>Appearance</h2>
+  <p class="mute">Choose how Study Track looks. Auto follows your device.</p>
+  <div class="seg" id="themeSeg"><button data-th="light">☀️ Light</button><button data-th="dark">🌙 Dark</button><button data-th="auto">🖥️ Auto</button></div></div>
+ <div class="card"><h2>Danger zone</h2><div class="row"><button class="d" id="clr">Delete all my sessions</button><button class="d" id="wipe">Reset everything</button></div></div>
+</section>
+</main>
+</div>
+<script>
+const $=id=>document.getElementById(id),K='studytrack-v1';
+const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+let S={name:'',theme:'auto',fb:2,goals:[2,3,3,3,3,2,0],dayGoals:{},subjects:[{id:'s1',name:'Maths',exam:'',areas:['General']}],sessions:[]};
+let T={start:null,acc:0,sub:'',area:''};
+const DEF=JSON.parse(JSON.stringify(S));let U=null;const KK=()=>K+':'+U;
+function loadUser(){S=JSON.parse(JSON.stringify(DEF));T={start:null,acc:0,sub:'',area:''};try{const r=localStorage.getItem(KK());if(r)S=Object.assign(S,JSON.parse(r));const t=localStorage.getItem(KK()+'t');if(t)T=JSON.parse(t)}catch(e){}}
+const save=()=>{if(!U)return;try{localStorage.setItem(KK(),JSON.stringify(S));localStorage.setItem(KK()+'t',JSON.stringify(T));localStorage.setItem(K+'theme',S.theme)}catch(e){}};
+const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const today=iso(new Date());let sel=today,cm=new Date();cm.setDate(1);
+const uid=()=>Math.random().toString(36).slice(2,9);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const dow=s=>new Date(s+'T00:00').getDay();
+const goalFor=s=>s in S.dayGoals?S.dayGoals[s]:(S.goals[dow(s)]??S.fb);
+const mins=s=>S.sessions.filter(x=>x.date===s).reduce((a,x)=>a+x.min,0);
+const hrs=m=>(m/60).toFixed(1);
+const subName=id=>(S.subjects.find(x=>x.id===id)||{name:'(deleted)'}).name;
+
+/* theme */
+function applyTheme(){const r=document.documentElement;S.theme==='auto'?r.removeAttribute('data-theme'):r.setAttribute('data-theme',S.theme);
+ document.querySelectorAll('#themeSeg button').forEach(b=>b.classList.toggle('on',b.dataset.th===S.theme))}
+document.querySelectorAll('#themeSeg button').forEach(b=>b.onclick=()=>{S.theme=b.dataset.th;save();applyTheme()});
+
+/* tabs */
+const TABS=[['today','Today','🏠'],['cal','Calendar','📅'],['stats','My stats','📊'],['board','Leaderboard','🏆'],['chat','Chat','💬'],['setup','Setup','⚙️'],['admin','Admin','🛡️']];
+$('nav').innerHTML=TABS.map(t=>`<button data-t="${t[0]}"><span class="ni">${t[2]}</span><span>${t[1]}</span></button>`).join('');
+function go(t){if(t==='admin'&&!isAdmin)t='today';TABS.forEach(x=>{$('t-'+x[0]).classList.toggle('hide',x[0]!==t)});
+ document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));render();t==='chat'?chatOpen():chatStop();if(t==='admin')admRender()}
+document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>go(b.dataset.t));
+
+/* streak */
+function streak(){let d=new Date(),n=0,first=true;
+ for(let i=0;i<1000;i++){const s=iso(d),g=goalFor(s),m=mins(s)/60;
+  if(g===0){}else if(m>=g)n++;else if(first&&s===today){}else break;
+  first=false;d.setDate(d.getDate()-1)}return n}
+
+/* selects */
+function fillSel(ss,as,cur){const sel1=$(ss),sel2=$(as);const v=sel1.value||cur;
+ sel1.innerHTML=S.subjects.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('')||'<option value="">Add a subject in Setup</option>';
+ if(S.subjects.some(s=>s.id===v))sel1.value=v;
+ const sub=S.subjects.find(s=>s.id===sel1.value);sel2.innerHTML=(sub?sub.areas:[]).map(a=>`<option>${esc(a)}</option>`).join('')}
+['tSub','mSub'].forEach(id=>$(id).onchange=()=>fillSel(id,id==='tSub'?'tArea':'mArea'));
+
+function addSession(sub,area,min,note,date){if(!sub||min<1)return;S.sessions.push({id:uid(),date,subject:sub,area,min:Math.round(min),note:note||''});save();render()}
+
+/* timer */
+const el=()=>T.acc+(T.start?Date.now()-T.start:0);
+function tick(){const s=Math.floor(el()/1000);$('clock').textContent=[s/3600,s/60%60,s%60].map(v=>String(Math.floor(v)).padStart(2,'0')).join(':')}
+const T0=Date.now();
+const FAKE=[{n:'Mia',s:'Biology',a:'Genetics',c:'#e11d74',o:2530,b:{'👏':2,'🤨':0}},{n:'Liam',s:'Mathematics Advanced',a:'Calculus',c:'#2563eb',o:930,b:{'👏':0,'🤨':1}},{n:'Zara',s:'English Advanced',a:'Essay practice',c:'#16a34a',o:4125,b:{'👏':1,'🤨':3}}];
+function myAv(sz){sz=sz||34;const b=S.bcolor||'#7c3aed';return `<div class="av" style="width:${sz}px;height:${sz}px;border:3px solid ${b};${S.avatar?`background:url(${S.avatar}) center/cover;color:transparent`:'background:'+b}">${esc((S.name||'?')[0])}</div>`}
+$('pImg').onchange=e=>{const f=e.target.files[0];if(!f)return;const u=URL.createObjectURL(f),im=new Image();
+ im.onload=()=>{const c=document.createElement('canvas'),z=160,m=Math.min(im.width,im.height);c.width=c.height=z;c.getContext('2d').drawImage(im,(im.width-m)/2,(im.height-m)/2,m,m,0,0,z,z);S.avatar=c.toDataURL('image/jpeg',.85);URL.revokeObjectURL(u);save();render()};
+ im.onerror=()=>alert('Could not read that image.');im.src=u;e.target.value=''};
+$('pRm').onclick=()=>{delete S.avatar;save();render()};
+$('pCol').oninput=e=>{S.bcolor=e.target.value;save();render()};
+const fmt=s=>[s/3600,s/60%60,s%60].map(v=>String(Math.floor(v)).padStart(2,'0')).join(':');
+let liveSig='';const lb=(r,e)=>{const id='l-'+r.n,k=S.kudos||{},n=((r.b||{})[e]||0)+(k[id]===e?1:0);return `<button class="${k[id]===e?'on':''}" data-k="${id}" data-e="${e}">${e} ${n}</button>`};
+function live(){const el2=$('live');if(!el2)return;$('tStat').textContent=T.start?'Running · '+subName(T.sub):T.acc?'Paused':'Nothing running';const el3=(Date.now()-T0)/1000;hdr();
+ const rows=[];if(T.start)rows.push({n:(S.name||'You')+' (you)',s:subName(T.sub),a:T.area,c:'#7c3aed',me:1,t:el()/1000});
+ FAKE.forEach(f=>rows.push({n:f.n,s:f.s,a:f.a,c:f.c,b:f.b,fake:1,t:f.o+el3}));
+ const sig=rows.map(r=>r.n+r.s+(r.fake?(S.kudos||{})['l-'+r.n]:'')).join('|')+(S.avatar||'').length+S.bcolor;if(sig===liveSig){el2.querySelectorAll('.lt').forEach((s,i)=>{if(rows[i])s.textContent=fmt(rows[i].t)});return}liveSig=sig;
+ el2.innerHTML=rows.map(r=>`<div class="li"><div class="row" style="margin:0">${r.me?myAv(34):`<div class="av" style="background:${r.c}">${esc(r.n[0])}</div>`}<div><b>${esc(r.n)}</b><div class="mute">${esc(r.s)} · ${esc(r.a||'')}</div></div></div><div style="text-align:right"><span class="dot"></span> <b class="lt" style="font-variant-numeric:tabular-nums">${fmt(r.t)}</b>${r.fake?`<div class="rx" style="justify-content:flex-end">${lb(r,'👏')}${lb(r,'🤨')}</div>`:''}</div></div>`).join('')}
+const ACT=[{id:'a1',n:'Mia',c:'#e11d74',s:'Biology',a:'Genetics',m:50,note:'Past paper Q3-6',ago:'12m ago',b:{'👏':3,'🤨':0}},
+{id:'a2',n:'Liam',c:'#2563eb',s:'Mathematics Advanced',a:'Calculus',m:25,note:'Integration by parts',ago:'40m ago',b:{'👏':1,'🤨':0}},
+{id:'a3',n:'Zara',c:'#16a34a',s:'English Advanced',a:'Essay practice',m:360,note:'Studied all day, honest',ago:'2h ago',b:{'👏':2,'🤨':4}}];
+function feed(){const el2=$('feed');if(!el2)return;S.kudos=S.kudos||{};
+ const mine=[...S.sessions].sort((a,b)=>a.date<b.date?1:-1).slice(0,3).map(x=>({id:x.id,n:(S.name||'You')+' (you)',c:'#7c3aed',s:subName(x.subject),a:x.area,m:x.min,note:x.note,ago:x.date,own:1,b:{}}));
+ const btn=(x,e,l)=>{const n=(x.b[e]||0)+(S.kudos[x.id]===e?1:0);return x.own?(n?`<span class="tag">${e} ${n}</span>`:''):`<button class="${S.kudos[x.id]===e?'on':''}" data-k="${x.id}" data-e="${e}">${e} ${l} ${n}</button>`};
+ el2.innerHTML=[...mine,...ACT].map(x=>`<div class="li" style="align-items:flex-start"><div class="row" style="margin:0;align-items:flex-start;flex:1">${x.own?myAv(34):`<div class="av" style="background:${x.c}">${esc(x.n[0])}</div>`}<div><b>${esc(x.n)}</b> logged ${x.m>=60?Math.floor(x.m/60)+'h ':''}${x.m%60?x.m%60+'m':''}<div class="mute">${esc(x.s)} · ${esc(x.a)} · ${esc(x.ago)}${x.note?' — '+esc(x.note):''}</div><div class="rx">${btn(x,'👏','Kudos')}${btn(x,'🤨','Sus')}</div></div></div></div>`).join('')}
+$('feed').onclick=e=>{const b=e.target.closest('[data-k]');if(!b)return;S.kudos=S.kudos||{};if(S.kudos[b.dataset.k]===b.dataset.e)delete S.kudos[b.dataset.k];else S.kudos[b.dataset.k]=b.dataset.e;save();feed()};
+document.querySelectorAll('.kAll').forEach(b=>b.onclick=()=>{S.kudos=S.kudos||{};const ids=FAKE.map(f=>'l-'+f.n).concat(ACT.map(a=>a.id)),all=ids.every(i=>S.kudos[i]==='👏');
+ ids.forEach(i=>{if(all)delete S.kudos[i];else S.kudos[i]='👏'});save();liveSig='';live();feed()});
+$('live').onclick=e=>{const b=e.target.closest('[data-k]');if(!b)return;S.kudos=S.kudos||{};if(S.kudos[b.dataset.k]===b.dataset.e)delete S.kudos[b.dataset.k];else S.kudos[b.dataset.k]=b.dataset.e;save();liveSig='';live()};
+setInterval(live,1000);
+setInterval(tick,500);
+$('tStart').onclick=()=>{if(!T.start){T.start=Date.now();T.sub=$('tSub').value;T.area=$('tArea').value;save()}};
+$('tPause').onclick=()=>{if(T.start){T.acc+=Date.now()-T.start;T.start=null;save()}};
+$('tDisc').onclick=()=>{T={start:null,acc:0,sub:'',area:''};save();tick()};
+$('tFin').onclick=()=>{const m=el()/60000;if(m<0.5){alert('Run the timer a little longer first.');return}
+ addSession(T.sub||$('tSub').value,T.area||$('tArea').value,Math.max(1,m),'',today);$('tDisc').onclick()};
+$('mAdd').onclick=()=>{const m=+$('mMin').value;if(!m)return;addSession($('mSub').value,$('mArea').value,m,$('mNote').value,sel);$('mMin').value='';$('mNote').value=''};
+document.querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>$('mMin').value=b.dataset.q);
+$('dayGoal').onchange=e=>{S.dayGoals[sel]=Math.max(0,+e.target.value||0);save();render()};
+$('rstGoal').onclick=()=>{delete S.dayGoals[sel];save();render()};
+$('logDate').onchange=e=>{if(e.target.value){sel=e.target.value;render()}};
+
+/* calendar */
+$('pm').onclick=()=>{cm.setMonth(cm.getMonth()-1);render()};$('nm').onclick=()=>{cm.setMonth(cm.getMonth()+1);render()};
+
+/* setup */
+$('saveName').onclick=()=>{S.name=$('name').value.trim();save();render()};
+$('saveGoals').onclick=()=>{S.goals=[...document.querySelectorAll('#g7 input')].map(i=>Math.max(0,+i.value||0));S.fb=Math.max(0,+$('fb').value||0);save();render()};
+$('nsAdd').onclick=()=>{const n=$('nsName').value.trim();if(!n)return;S.subjects.push({id:uid(),name:n,exam:$('nsExam').value,areas:['General']});$('nsName').value='';$('nsExam').value='';save();render()};
+$('subs').onclick=e=>{const b=e.target.closest('[data-a]');if(!b)return;const s=S.subjects.find(x=>x.id===b.dataset.s);
+ if(b.dataset.a==='del'){if(confirm('Delete '+s.name+'? Its sessions stay in your log.')){S.subjects=S.subjects.filter(x=>x!==s)}}
+ if(b.dataset.a==='area'){const i=$('na-'+s.id).value.trim();if(i&&!s.areas.includes(i))s.areas.push(i)}
+ if(b.dataset.a==='rm'){s.areas=s.areas.filter(a=>a!==b.dataset.v);if(!s.areas.length)s.areas=['General']}
+ save();render()};
+$('exp').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,1)],{type:'application/json'}));a.download='studytrack-backup.json';a.click()};
+$('imp').onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{try{S=Object.assign(S,JSON.parse(t));save();applyTheme();render()}catch(x){alert('Could not read that file.')}})};
+$('clr').onclick=()=>{if(confirm('Delete every logged session?')){S.sessions=[];save();render()}};
+$('wipe').onclick=()=>{if(confirm('Reset everything on this device?')){try{localStorage.removeItem(KK());localStorage.removeItem(KK()+'t')}catch(e){}location.reload()}};
+
+const LIST={'English':['English Standard','English Advanced','English EAL/D','English Studies','English Extension 1','English Extension 2'],
+'Mathematics':['Mathematics Standard 1','Mathematics Standard 2','Mathematics Advanced','Mathematics Extension 1','Mathematics Extension 2'],
+'Science':['Biology','Chemistry','Physics','Earth and Environmental Science','Investigating Science','Science Extension'],
+'Humanities and social sciences':['Ancient History','Modern History','History Extension','Geography','Legal Studies','Economics','Business Studies','Society and Culture','Studies of Religion I','Studies of Religion II','Aboriginal Studies'],
+'PDHPE':['PDHPE','Health and Movement Science','Community and Family Studies'],
+'Technology':['Design and Technology','Engineering Studies','Food Technology','Industrial Technology','Information Processes and Technology','Software Engineering','Enterprise Computing','Textiles and Design','Agriculture'],
+'Creative arts':['Visual Arts','Drama','Dance','Music 1','Music 2','Music Extension'],
+'Languages':['Arabic','Chinese','French','German','Indonesian','Italian','Japanese','Korean','Modern Greek','Spanish','Latin','Classical Greek'],
+'Vocational (VET)':['Business Services','Construction','Hospitality','Retail Services','Entertainment Industry','Information and Digital Technology']};
+function renderPk(){pk('pkQ','pk');pk('oQ','opk');$('oCnt').textContent=S.subjects.length+' selected'}
+function pk(qi,ti){const q=$(qi).value.trim().toLowerCase(),have=new Set(S.subjects.map(s=>s.name.toLowerCase()));let h='';
+ for(const[g,l]of Object.entries(LIST)){const f=l.filter(n=>n.toLowerCase().includes(q)||g.toLowerCase().includes(q));if(!f.length)continue;
+  h+=`<div class="mute" style="margin:8px 0 4px">${g}</div><div class="row" style="margin:0">`+f.map(n=>{const on=have.has(n.toLowerCase());return `<button class="${on?'p':''}" data-p="${esc(n)}" style="padding:4px 10px;font-size:13px">${on?'✓ ':''}${esc(n)}</button>`}).join('')+'</div>'}
+ $(ti).innerHTML=h||'<p class="mute">No match. Type it in by hand.</p>'}
+$('pkQ').oninput=renderPk;$('oQ').oninput=renderPk;
+const pkClick=e=>{const b=e.target.closest('[data-p]');if(!b)return;const n=b.dataset.p,i=S.subjects.findIndex(s=>s.name.toLowerCase()===n.toLowerCase());
+ if(i<0)S.subjects.push({id:uid(),name:n,exam:'',areas:['General']});else if(confirm('Remove '+n+'? Its sessions stay in your log.'))S.subjects.splice(i,1);save();render()};
+$('pk').onclick=$('opk').onclick=pkClick;
+const listRow=x=>`<div class="li"><div><b>${esc(subName(x.subject))}</b> · ${esc(x.area)} · ${x.min}m<div class="mute">${x.date}${x.note?' — '+esc(x.note):''}</div></div><button class="d" data-del="${x.id}">✕</button></div>`;
+document.addEventListener('click',e=>{const b=e.target.closest('[data-del]');if(b){S.sessions=S.sessions.filter(x=>x.id!==b.dataset.del);save();render()}});
+const bars=(m,total)=>Object.entries(m).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div class="li"><span style="flex:1">${esc(k)}</span><div class="bar" style="width:40%"><i style="width:${total?v/total*100:0}%"></i></div><b>${hrs(v)}h</b></div>`).join('')||'<p class="mute">Nothing yet.</p>';
+
+function render(){
+ hdr();$('pPrev').innerHTML=myAv(64);if($('pCol').value!==(S.bcolor||'#7c3aed'))$('pCol').value=S.bcolor||'#7c3aed';$('name').value=S.name;
+ fillSel('tSub','tArea',T.sub);fillSel('mSub','mArea');
+ /* today */
+ const g=goalFor(sel),m=mins(sel);
+ $('dayTitle').textContent=(sel===today?'Today · ':'')+new Date(sel+'T00:00').toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long'});
+ $('goalTxt').textContent=g===0?'Rest day':'Goal '+g+'h';$('dayGoal').value=g;
+ const pct=g?Math.round(m/60/g*100):0;$('ring').style.setProperty('--p',Math.min(100,pct));$('rTime').textContent=Math.floor(m/60)+'h '+(m%60)+'m';$('rOf').textContent=g?'of '+g+' hours':'Rest day';$('rPct').textContent=g?pct+'%':'';$('logDate').value=sel;$('logDate').max=today;
+ $('doneTxt').textContent=!g?'Rest day. Anything you log is a bonus.':pct>=100?(pct>=130?'Well past it — ':'Goal hit — ')+hrs(m-g*60)+' hours of credit.':hrs(g*60-m)+' hours to go.';
+ $('dayList').innerHTML=S.sessions.filter(x=>x.date===sel).map(listRow).join('')||'<p class="mute">Nothing logged yet.</p>';
+ /* calendar */
+ const y=cm.getFullYear(),mo=cm.getMonth();$('mt').textContent=cm.toLocaleDateString(undefined,{month:'long',year:'numeric'});
+ let h=DAYS.map(d=>`<div class="h">${d[0]}</div>`).join('');for(let i=0;i<new Date(y,mo,1).getDay();i++)h+='<div class="h"></div>';
+ for(let d=1;d<=new Date(y,mo+1,0).getDate();d++){const s=iso(new Date(y,mo,d)),gg=goalFor(s),r=gg?mins(s)/60/gg:(mins(s)?1:0);
+  const bg=r>0?`background:color-mix(in srgb,var(--ok) ${Math.round(Math.min(1,r)*100)}%,var(--cell))`:'';
+  h+=`<div class="${s===sel?'sel':''} ${exDay(s)}" style="${bg}" data-d="${s}" title="${exTitle(s)}">${d}</div>`}
+ $('cal').innerHTML=h;$('cal').onclick=e=>{const d=e.target.dataset.d;if(d){sel=d;go('today')}};
+ const up=S.subjects.filter(s=>s.exam&&s.exam>=today).sort((a,b)=>a.exam>b.exam?1:-1);
+ $('count').innerHTML=up.map(s=>`<div class="li"><span>${esc(s.name)}</span><b>${Math.ceil((new Date(s.exam+'T00:00')-new Date(today+'T00:00'))/864e5)} days</b></div>`).join('')||'<p class="mute">Add exam dates in Setup.</p>';
+ /* stats */
+ const tot=S.sessions.reduce((a,x)=>a+x.min,0),ad=new Set(S.sessions.map(x=>x.date)).size;
+ $('sTot').textContent=hrs(tot);$('sDays').textContent=ad;$('sStreak').textContent=streak();$('sAvg').textContent=ad?hrs(tot/ad):'0.0';
+ let w='';const mx=Math.max(60,...[...Array(7)].map((_,i)=>{const d=new Date();d.setDate(d.getDate()-i);return mins(iso(d))}));
+ for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const mm=mins(iso(d));w+=`<div><i style="height:${mm/mx*85}px"></i>${hrs(mm)}<br>${DAYS[d.getDay()]}</div>`}
+ $('w7').innerHTML=w;
+ const bs={},ba={};S.sessions.forEach(x=>{const n=subName(x.subject);bs[n]=(bs[n]||0)+x.min;ba[n+' · '+x.area]=(ba[n+' · '+x.area]||0)+x.min});
+ $('bySub').innerHTML=bars(bs,tot);$('byArea').innerHTML=bars(ba,tot);
+ $('log').innerHTML=[...S.sessions].sort((a,b)=>a.date<b.date?1:-1).slice(0,60).map(listRow).join('')||'<p class="mute">No sessions yet.</p>';
+ /* setup */
+ $('g7').innerHTML=DAYS.map((d,i)=>`<div class="mute">${d}<input type="number" min="0" step="0.5" value="${S.goals[i]}"></div>`).join('');$('fb').value=S.fb;
+ $('subs').innerHTML=S.subjects.map(s=>`<div class="li" style="display:block"><div class="row" style="justify-content:space-between"><b>${esc(s.name)}</b><span class="mute">${s.exam?'Exam '+s.exam:''}</span><button class="d" data-a="del" data-s="${s.id}">Delete</button></div>
+  <div class="row">${s.areas.map(a=>`<button data-a="rm" data-s="${s.id}" data-v="${esc(a)}">${esc(a)} ✕</button>`).join('')}</div>
+  <div class="row"><input id="na-${s.id}" placeholder="New area"><button data-a="area" data-s="${s.id}">Add area</button></div></div>`).join('');
+ renderPk();applyTheme();tick();live();feed();ach();exRender();board()}
+function hdr(){const g=goalFor(today),m=mins(today),pct=g?Math.min(100,m/60/g*100):0,wk=[...Array(7)].reduce((a,_,i)=>{const d=new Date();d.setDate(d.getDate()-i);return a+mins(iso(d))},0),
+ ex=S.subjects.filter(s=>s.exam&&s.exam>=today).sort((a,b)=>a.exam>b.exam?1:-1)[0],dl=ex?Math.ceil((new Date(ex.exam+'T00:00')-new Date(today+'T00:00'))/864e5):0,
+ tot=S.sessions.reduce((a,x)=>a+x.min,0),st=streak(),n=FAKE.length+24+(T.start?1:0);
+ $('hPlan').textContent=new Date().toLocaleDateString(undefined,{weekday:'short',day:'numeric',month:'short'})+' · '+(g?g+' h planned':'Rest day');
+ $('hSub').textContent=S.subjects.length+' subjects · '+hrs(tot)+' hours logged';
+ $('hExam').innerHTML=ex?`<span class="mute">NEXT EXAM</span><span class="dot" style="background:var(--acc);animation:none"></span><b>${esc(ex.name)}</b><b>${dl===0?'today':dl+'d'}</b>`:'<span class="mute">NEXT EXAM</span><b>none set</b>';
+ $('hToday').innerHTML=`<div class="mute" style="font-weight:600">STUDIED TODAY</div><div><b style="font-size:20px">${Math.floor(m/60)}h ${m%60}m</b><span class="mute"> / ${g}h</span></div><div class="bar" style="height:5px"><i style="width:${pct}%"></i></div>`;
+ $('hLive').innerHTML=`<span class="dot"></span><b>${n}</b> studying `+FAKE.map(f=>`<span class="av" style="width:26px;height:26px;font-size:11px;background:${f.c};margin-left:-6px;border:2px solid var(--card)">${f.n[0]}</span>`).join('');
+ $('hi').innerHTML=myAv(38)+`<div><b>${esc(S.name||'You')}</b><div class="mute" style="display:flex;align-items:center;gap:6px"><span class="tag" style="background:#d99a1c;color:#fff;border:0">${st}</span>${hrs(wk)}h this week</div></div>`}
+const EXD={'2026-10-13':'English Advanced (Paper 1)|English Standard (Paper 1)|English EAL/D (Paper 1)|English Studies|Classical Greek Extension|German Continuers|Indonesian Extension|Japanese Beginners|Japanese Continuers',
+'2026-10-14':'English Advanced (Paper 2)|English Standard (Paper 2)|English EAL/D (Paper 2)|Music 1 (Aural Skills)|Music 2 (Musicology and Aural Skills)',
+'2026-10-15':'Earth and Environmental Science|Indonesian Beginners|Indonesian Continuers|Agriculture|Arabic Continuers|Chinese in Context|Japanese in Context|Korean in Context|Spanish Beginners|Spanish Continuers',
+'2026-10-16':'Modern History|Japanese Extension|Classical Greek Continuers|Hospitality (VET)|German Extension',
+'2026-10-19':'Mathematics Advanced|Mathematics Standard 1|Mathematics Standard 2|Mathematics Extension 2',
+'2026-10-20':'German Beginners|Engineering Studies|Latin Continuers|Textiles and Design|Spanish Extension|Society and Culture|Arabic Extension|Chinese Continuers',
+'2026-10-21':'Biology|History Extension|Business Services (VET)',
+'2026-10-22':'Latin Extension|Studies of Religion I|Studies of Religion II|Drama|Chinese Beginners|Chinese Extension',
+'2026-10-23':'Ancient History|Mathematics Extension 1',
+'2026-10-26':'Business Studies|Science Extension|Construction (VET)',
+'2026-10-27':'Modern Greek Beginners|Italian Continuers|Korean Continuers|Modern Greek Extension|Software Engineering|Economics|Entertainment Industry (VET)',
+'2026-10-28':'Health and Movement Science|English Extension 1|Information and Digital Technology (VET)|Retail Services (VET)|Korean and Literature',
+'2026-10-29':'Italian Beginners|Korean Beginners|Dance|Italian Extension|Modern Greek Continuers|Enterprise Computing|Design and Technology|French Beginners|French Extension',
+'2026-10-30':'Aboriginal Studies|Chemistry|Visual Arts',
+'2026-11-02':'Legal Studies|Geography',
+'2026-11-03':'Community and Family Studies|Investigating Science|French Continuers',
+'2026-11-04':'Food Technology|Industrial Technology',
+'2026-11-05':'Physics'};
+const EX=Object.entries(EXD).flatMap(([d,s])=>s.split('|').map(n=>[d,n]));
+const exMatch=(sub,lab)=>{const a=sub.toLowerCase(),b=lab.toLowerCase();return b===a||b.startsWith(a+' ')||b.startsWith(a+' (')};
+const exMine=n=>S.subjects.some(s=>exMatch(s.name,n));
+const EXB=EX.reduce((m,[d,n])=>((m[d]=m[d]||[]).push(n),m),{});
+const exDay=s=>EXB[s]?(EXB[s].some(exMine)?'xm':'xa'):'';
+const exTitle=s=>EXB[s]?esc(EXB[s].filter(exMine).join(', ')||'HSC exams'):'';
+function exRender(){const only=$('exMine').checked;
+ $('exList').innerHTML=Object.keys(EXB).map(d=>{const l=EXB[d].filter(n=>!only||exMine(n));if(!l.length)return'';
+  return `<div class="li" style="align-items:flex-start"><b style="min-width:110px${d===today?';color:var(--bad)':''}">${new Date(d+'T00:00').toLocaleDateString(undefined,{weekday:'short',day:'numeric',month:'short'})}</b><div class="rx" style="margin:0">${l.map(n=>`<span class="tag" style="${exMine(n)?'background:var(--acc);color:var(--accT);border-color:var(--acc)':''}">${esc(n)}</span>`).join('')}</div></div>`}).join('')||'<p class="mute">None of your subjects have a written exam in this timetable.</p>'}
+$('exMine').onchange=exRender;
+$('exSet').onclick=()=>{let n=0;S.subjects.forEach(s=>{const d=EX.filter(x=>exMatch(s.name,x[1])).map(x=>x[0]).sort()[0];if(d){s.exam=d;n++}});save();render();alert(n?'Exam dates set on '+n+' of your subjects.':'None of your subjects have a written exam in this timetable.')};
+$('exIcs').onclick=()=>{const mine=EX.filter(x=>exMine(x[1])),L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//StudyTrack//EN'];
+ (mine.length?mine:EX).forEach(([d,n],i)=>{const e=new Date(d+'T00:00');e.setDate(e.getDate()+1);L.push('BEGIN:VEVENT','UID:hsc'+i+'@studytrack','DTSTAMP:20261016T000000Z','DTSTART;VALUE=DATE:'+d.replace(/-/g,''),'DTEND;VALUE=DATE:'+iso(e).replace(/-/g,''),'SUMMARY:HSC '+n,'END:VEVENT')});L.push('END:VCALENDAR');
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([L.join('\r\n')],{type:'text/calendar'}));a.download='hsc-exams-2026.ics';a.click()};
+let bP='d',bOff=0,lastP='d',susOff=false;
+const NAMES='Olivia,Jack,Charlotte,Oliver,Amelia,William,Isla,Henry,Grace,Lucas,Chloe,Thomas,Ruby,Archie,Sophie,Leo,Emily,Max,Matilda,Oscar,Ella,Harry,Lily,James,Hannah,Cooper,Evie,Jacob,Sienna,Mason,Harper,Riley,Georgia,Hudson,Willow,Isaac,Layla,Ryan,Bella,Nate,Poppy,Felix,Aria,Kai,Millie,Sam,Tessa,Dylan,Priya,Arjun'.split(','),PAL=['#e11d74','#2563eb','#16a34a','#0891b2','#9333ea','#ea580c','#ca8a04','#0d9488'];
+let sd=7;const rnd=()=>(sd=(sd*16807)%2147483647)/2147483647;
+const DUM=NAMES.map((n,i)=>{const a=rnd(),b=rnd(),c=rnd(),w=3+a*33,m=w*(2.4+b*1.8),y=m*(6+c*5);return[n,PAL[i%PAL.length],+w.toFixed(1),+m.toFixed(1),+y.toFixed(1)]});
+const BOARD=[['Mia','#e11d74',24.5,78,640],['Liam','#2563eb',18.2,61,720],['Zara','#16a34a',31,96,590],['Noah','#0891b2',12.4,48,810],['Ava','#9333ea',27.8,88,705],['Ethan','#ea580c',9.1,35,430]];
+function boardOld(){const k=bP==='7'?2:bP==='m'?3:4,c=new Date();c.setDate(c.getDate()-6);const cut=iso(c);
+ const mine=S.sessions.filter(x=>bP==='7'?x.date>=cut&&x.date<=today:bP==='m'?x.date.startsWith(today.slice(0,7)):x.date.startsWith(today.slice(0,4))).reduce((a,x)=>a+x.min,0)/60;
+ const rows=BOARD.concat(DUM).map(b=>({n:b[0],c:b[1],h:b[k]})).concat([{n:S.name||'You',c:'#7c3aed',h:mine,me:1}]).sort((a,b)=>b.h-a.h);
+ const top=rows.slice(0,3),H=[150,115,90],col=['#d4a017','#9ca3af','#b4743c'],med=['🥇','🥈','🥉'];
+ $('podium').innerHTML='<div class="pod">'+[1,0,2].map(i=>{const r=top[i];if(!r)return'';
+  return `<div class="pc"><div class="pcw">${r.me?myAv(52):`<div class="av" style="background:${r.c};width:52px;height:52px;font-size:20px">${esc(r.n[0])}</div>`}</div><b>${esc(r.n)}${r.me?' (you)':''}</b><div class="mute">${r.h.toFixed(1)} h</div><div class="blk" style="height:${H[i]}px;background:${col[i]}">${med[i]}</div></div>`}).join('')+'</div>';
+ const rk=rows.findIndex(r=>r.me)+1;$('myRank').textContent='You: #'+rk+' of '+rows.length+' with '+mine.toFixed(1)+' h'+(rk>3?'. Keep going!':'')}
+document.querySelectorAll('#bSeg button').forEach(b=>b.onclick=()=>{bP=b.dataset.p;document.querySelectorAll('#bSeg button').forEach(x=>x.classList.toggle('on',x===b));board()});
+const SUBJ14=['Mathematics Advanced','English Advanced','Biology','Chemistry','Physics','Economics','Business Studies','Legal Studies','Modern History','Ancient History','Software Engineering','Engineering Studies','Mathematics Extension 1','Mathematics Standard 2'];
+let sd2=11;const r2=()=>(sd2=(sd2*16807)%2147483647)/2147483647;
+const PPL=['Mia','Liam','Zara','Noah','Ava','Ethan'].concat(NAMES).map((n,i)=>{const avg=2+r2()*5.5,goal=[3,4,4.5,5,6][Math.floor(r2()*5)],subs=[...new Set([0,0,0].map(()=>SUBJ14[Math.floor(r2()*14)]))];
+ return{n,c:PAL[i%PAL.length],goal,subs,days:[...Array(180)].map(()=>r2()<.08?0:+Math.max(0,avg*(.4+r2()*1.3)).toFixed(1))}});
+const lvS=l=>l>=9?'background:#fde4ef;color:#be185d':l===8?'background:#dff4f2;color:#0f766e':'background:#fdf0d5;color:#a16207';
+const avt=(r,s)=>r.me?myAv(s):`<div class="av" style="width:${s}px;height:${s}px;font-size:${Math.round(s*.4)}px;background:${r.c}">${esc(r.n[0])}</div>`;
+function banner(){const el2=$('susBan'),list=[...S.sessions].sort((a,b)=>a.date<b.date?1:-1);if(susOff||!list.length){el2.innerHTML='';return}
+ const subs=[...new Set(list.slice(0,6).map(x=>subName(x.subject)))],n=Math.min(3,list.length);
+ el2.innerHTML=`<div class="ban"><div class="av" style="background:#0891b2">N</div><div style="flex:1"><b>Noah called your study sus</b> <span class="tag">Demo</span><div class="mute">${esc(subs.slice(0,2).join(' · '))}${subs.length>2?' and '+(subs.length-2)+' more':''}</div></div><button id="susSee">See all ${n}</button><button id="susX">✕</button></div>`;
+ $('susSee').onclick=()=>alert('Demo: Noah, Ava and Ethan called '+n+' of your sessions sus.');$('susX').onclick=()=>{susOff=true;banner()}}
+function board(){banner();if(bP!==lastP){bOff=0;lastP=bP}
+ const names=[...new Set(SUBJ14.concat(S.subjects.map(s=>s.name)))],cur=$('bSub2').value;
+ $('bSub2').innerHTML='<option value="all">Everyone, all subjects</option>'+names.map(n=>`<option>${esc(n)}</option>`).join('');$('bSub2').value=cur||'all';
+ const f=$('bSub2').value==='all'?'':$('bSub2').value,rk=$('bRank').value||'h',ds=i=>{const d=new Date();d.setDate(d.getDate()-i);return iso(d)};
+ const idx=bP==='d'?[bOff]:[...Array(bP==='7'?7:bP==='30'?30:180).keys()];
+ const mk=p=>{const hrs=p.days.map((h,i)=>f?(p.subs.includes(f)?+(h*[.55,.3,.15][p.subs.indexOf(f)]).toFixed(1):0):h);return{...p,hrs,ses:hrs.map(h=>h>0?Math.max(1,Math.round(h/2.4)):0),all:p.days}};
+ const day=[...Array(180)].map((_,i)=>S.sessions.filter(x=>x.date===ds(i)));
+ const me={n:S.name||'You',me:1,c:'#7c3aed',all:day.map(l=>l.reduce((a,x)=>a+x.min,0)/60),hrs:day.map(l=>l.filter(x=>!f||subName(x.subject)===f).reduce((a,x)=>a+x.min,0)/60),ses:day.map(l=>l.filter(x=>!f||subName(x.subject)===f).length)};
+ if(T.start){const e=el()/3600000;me.all[0]+=e;if(!f||subName(T.sub)===f){me.hrs[0]+=e;me.ses[0]=Math.max(1,me.ses[0])}}
+ const calc=p=>{const g=i=>p.me?goalFor(ds(i)):p.goal,H=idx.reduce((a,i)=>a+p.hrs[i],0);let k=0,j=p.all[0]>=g(0)?0:1;while(j<180&&g(j)>0&&p.all[j]>=g(j)){k++;j++}
+  return{n:p.n,c:p.c,me:p.me,H,Sx:idx.reduce((a,i)=>a+p.ses[i],0),avg:H/idx.length,lon:Math.max(0,...idx.map(i=>p.hrs[i])),hit:Math.round(idx.filter(i=>p.hrs[i]>=g(i)).length/idx.length*100),st:k,lv:Math.max(1,Math.min(9,Math.round(p.all.reduce((a,b)=>a+b,0)/120))),b:[6,5,4,3,2,1,0].map(i=>p.hrs[i]),g0:g(0)}};
+ let rows=PPL.map(mk).concat([me]).map(calc);if(f)rows=rows.filter(r=>r.H>0);
+ const M={h:r=>r.H,s:r=>r.Sx,a:r=>r.avg,l:r=>r.lon,k:r=>r.st};rows.sort((a,b)=>M[rk](b)-M[rk](a));
+ const dd=new Date();dd.setDate(dd.getDate()-bOff);
+ $('bNav').style.display=bP==='d'?'flex':'none';$('bDay').textContent=bOff===0?'Today':bOff===1?'Yesterday':dd.toLocaleDateString(undefined,{weekday:'long'});
+ $('bDate').textContent=dd.toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long'});$('bNext').disabled=bOff===0;$('bPrev').disabled=bOff>=179;
+ $('bTxt').textContent={d:bOff===0?'Today only · sessions running now counted in':'One day only','7':'Last 7 days','30':'Last 30 days',all:'All time'}[bP];
+ const val=r=>({h:r.H.toFixed(1)+'<small>h</small>',s:r.Sx+'<small> sessions</small>',a:r.avg.toFixed(1)+'<small>h</small>',l:r.lon.toFixed(1)+'<small>h</small>',k:r.st+'<small> days</small>'})[rk];
+ $('podium').innerHTML='<div class="pods">'+[1,0,2].map(i=>{const r=rows[i];if(!r)return'';
+  return `<div class="pd ${i===0?'p1':''}"><span class="rk">#${i+1}</span>${avt(r,i===0?64:48)}<div class="big2">${val(r)}</div><div style="margin-top:4px"><b>${esc(r.n)}${r.me?' (you)':''}</b><span class="lv" style="${lvS(r.lv)}">Lv ${r.lv}</span></div><div class="mute" style="font-size:11px;margin-top:2px">${r.Sx} sessions · best day ${r.lon.toFixed(1)} h</div></div>`}).join('')+'</div>';
+ const gh=p=>p>=75?'background:#3fa56a;color:#fff':p>0?'background:#e6c75a;color:#3b3200':'background:var(--cell);color:var(--mute)';
+ $('btab').innerHTML='<thead><tr><th>#</th><th>MEMBER</th><th>HOURS</th><th>SESSIONS</th><th>AVG / DAY</th><th>LONGEST DAY</th><th>GOAL HIT</th><th>STREAK</th><th>LAST 7 DAYS</th></tr></thead><tbody>'+
+  rows.map((r,i)=>`<tr${r.me?' style="background:color-mix(in srgb,var(--acc) 10%,var(--card))"':''}><td style="color:var(--mute)">${i+1}</td><td><div style="display:flex;align-items:center;gap:8px">${avt(r,28)}<b>${esc(r.n)}${r.me?' (you)':''}</b><span class="lv" style="${lvS(r.lv)}">Lv ${r.lv}</span></div></td><td><b>${r.H.toFixed(1)}</b></td><td>${r.Sx}</td><td>${r.avg.toFixed(1)}</td><td>${r.lon.toFixed(1)}</td><td><span class="gh" style="${gh(r.hit)}">${r.hit}%</span></td><td style="color:var(--ok);font-weight:600">${r.st}</td><td><span class="mb">${r.b.map(h=>`<i style="height:${Math.max(2,Math.min(22,h/10*22))}px;background:${h>=r.g0?'#4caf6a':h>=r.g0*.5?'#e6c75a':'#4fa3b0'}"></i>`).join('')}</span></td></tr>`).join('')+'</tbody>';
+ const pos=rows.findIndex(r=>r.me)+1;$('myRank').textContent=pos?'You: #'+pos+' of '+rows.length+' with '+val({H:0,Sx:0,avg:0,lon:0,st:0,...rows[pos-1]}).replace(/<[^>]+>/g,''):'You have no time in this view yet.'}
+$('bPrev').onclick=()=>{bOff=Math.min(179,bOff+1);board()};$('bNext').onclick=()=>{bOff=Math.max(0,bOff-1);board()};$('bSub2').onchange=$('bRank').onchange=board;
+/* admin */
+const ADMIN_HASH='f2b718ea3a2357afd0a682dc53356ab21a22feeaa02c71099282c5ce064037c4'; /* paste the SHA-256 of your admin passcode between the quotes (open the site with #admin to generate it) */
+let isAdmin=false,ADMINPW='';
+const sha=async t=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t)))].map(x=>x.toString(16).padStart(2,'0')).join('');
+const LS=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(K+k));return v==null?d:v}catch(e){return d}},LW=(k,v)=>{try{localStorage.setItem(K+k,JSON.stringify(v))}catch(e){}};
+const rpc=(fn,a)=>fetch(CHAT.url+'/rest/v1/rpc/'+fn,{method:'POST',headers:cH(),body:JSON.stringify({p:ADMINPW,...a})}).then(r=>{if(!r.ok)throw 0});
+function adminOn(){isAdmin=true;document.body.classList.add('adm')}
+async function promptAdmin(){if(!ADMIN_HASH){const p=prompt('The admin lock is not set up yet. Choose an admin passcode (8+ characters). You will get a code to paste into the ADMIN_HASH line in index.html.');if(p&&p.length>=8)prompt('Copy this code into ADMIN_HASH:',await sha(p));return}
+ const p=prompt('Admin passcode');if(!p)return;if(await sha(p)!==ADMIN_HASH)return alert('Wrong passcode.');sessionStorage.setItem('stAdm',p);location.hash='';location.reload()}
+window.onhashchange=()=>{if(location.hash==='#admin'&&!isAdmin)promptAdmin()};
+async function isBanned(email){if(LS('bans',[]).includes(email))return true;
+ if(cOn()){try{const j=await(await fetch(CHAT.url+'/rest/v1/bans?select=email_hash&email_hash=eq.'+await sha(email),{headers:cH()})).json();return Array.isArray(j)&&j.length>0}catch(e){}}return false}
+$('aAdm').onclick=()=>{$('admBox').classList.toggle('hide');$('admPw').focus()};
+async function admLogin(){const p=$('admPw').value;if(!p)return;if(!ADMIN_HASH||await sha(p)!==ADMIN_HASH){$('admErr').textContent='Wrong passcode.';return}sessionStorage.setItem('stAdm',p);location.hash='';location.reload()}
+$('admGo').onclick=admLogin;$('admPw').onkeydown=e=>{if(e.key==='Enter')admLogin()};
+async function boot(){const s=localStorage.getItem(K+'sess'),ap=sessionStorage.getItem('stAdm');
+ if(ap&&ADMIN_HASH&&await sha(ap)===ADMIN_HASH){ADMINPW=ap;adminOn();enter('admin@local');if(!S.name){S.name='Admin';save()}}
+ else if(s&&ACC()[s]){if(await isBanned(s)){localStorage.removeItem(K+'sess');err('This account has been banned. Contact your admin.')}else enter(s)}
+ else if(location.hash==='#admin')promptAdmin()}
+async function banEmail(e){const l=LS('bans',[]);if(!l.includes(e)){l.push(e);LW('bans',l)}if(cOn())await rpc('admin_ban',{h:await sha(e),n:(ACC()[e]||{}).name||e})}
+async function unbanEmail(e){LW('bans',LS('bans',[]).filter(x=>x!==e));if(cOn())await rpc('admin_unban',{h:await sha(e)})}
+async function admRender(){$('admMode').textContent=cOn()?'Shared (database connected)':'This device only';
+ let msgs=[],mutes=[],bansR=[];
+ try{if(cOn()){const g=u=>fetch(CHAT.url+'/rest/v1/'+u,{headers:cH()}).then(r=>r.json());msgs=(await g('messages?select=id,name,uid,body,created_at&order=created_at.desc&limit=40')).reverse();mutes=await g('mutes?select=uid,name');bansR=await g('bans?select=email_hash,name')}else{msgs=LC().slice(-40);mutes=LS('mutes',[])}}catch(e){}
+ if(!Array.isArray(msgs))msgs=[];if(!Array.isArray(mutes))mutes=[];if(!Array.isArray(bansR))bansR=[];
+ const mu=new Set(mutes.map(m=>m.uid)),lb=LS('bans',[]),acc=ACC();
+ $('admMsgs').innerHTML=msgs.slice().reverse().map(m=>`<div class="li"><div style="min-width:0"><b>${esc(m.name)}</b> <span class="mute">${new Date(m.created_at).toLocaleString()}</span><div style="word-break:break-word">${esc(m.body)}</div></div><div class="row" style="margin:0;flex:none"><button data-a="del" data-id="${esc(m.id)}">Delete</button>${mu.has(m.uid)?'<span class="tag">Muted</span>':`<button class="d" data-a="mute" data-u="${esc(m.uid)}" data-n="${esc(m.name)}">Mute</button>`}</div></div>`).join('')||'<p class="mute">No messages.</p>';
+ $('admMutes').innerHTML=mutes.map(m=>`<div class="li"><span>${esc(m.name||m.uid)}</span><button data-a="unmute" data-u="${esc(m.uid)}">Unmute</button></div>`).join('')||'<p class="mute">Nobody is muted.</p>';
+ $('admAcc').innerHTML=Object.entries(acc).map(([e,a])=>`<div class="li"><div><b>${esc(a.name)}</b><div class="mute">${esc(e)}</div></div><div class="row" style="margin:0">${lb.includes(e)?`<button data-a="unban" data-e="${esc(e)}">Unban</button>`:`<button class="d" data-a="ban" data-e="${esc(e)}">Ban</button>`}<button data-a="pw" data-e="${esc(e)}">New password</button><button class="d" data-a="delacc" data-e="${esc(e)}">Delete</button></div></div>`).join('')||'<p class="mute">No accounts on this device.</p>';
+ $('admBans').innerHTML=(lb.map(e=>`<div class="li"><span>${esc(e)}</span><button data-a="unban" data-e="${esc(e)}">Unban</button></div>`).join('')+bansR.map(b=>`<div class="li"><span>${esc(b.name||'')} <span class="mute">${esc(String(b.email_hash).slice(0,10))}…</span></span><button data-a="unbanh" data-h="${esc(b.email_hash)}">Unban</button></div>`).join(''))||'<p class="mute">Nobody is banned.</p>';admMeta(msgs.length,mutes.length,Object.keys(acc).length,lb.length+bansR.length)}
+let admTab='chat';
+function admShow(){document.querySelectorAll('.admp').forEach(c=>c.classList.toggle('show',c.id==='ap-'+admTab));document.querySelectorAll('#admSeg button').forEach(b=>b.classList.toggle('on',b.dataset.s===admTab))}
+function admMeta(m,mu,ac,bn){const L={chat:['💬 Chat',m,'Messages'],mutes:['🔇 Muted',mu,'Muted people'],acc:['👤 Accounts',ac,'Accounts'],bans:['🚫 Banned',bn,'Banned']};
+ $('admStats').innerHTML=Object.values(L).map(x=>`<div><b>${x[1]}</b><span class="mute">${x[2]}</span></div>`).join('');
+ document.querySelectorAll('#admSeg button').forEach(b=>b.textContent=L[b.dataset.s][0]+' ('+L[b.dataset.s][1]+')');admShow()}
+document.querySelectorAll('#admSeg button').forEach(b=>b.onclick=()=>{admTab=b.dataset.s;admShow()});
+$('t-admin').onclick=async e=>{const b=e.target.closest('[data-a]');if(!b||!isAdmin)return;const d=b.dataset,a=d.a;
+ try{
+  if(a==='del'){if(cOn())await rpc('admin_delete_message',{mid:+d.id});else LW('chatlocal',LC().filter(m=>String(m.id)!==d.id))}
+  else if(a==='mute'){if(cOn())await rpc('admin_mute',{u:d.u,n:d.n});else{const l=LS('mutes',[]);if(!l.some(m=>m.uid===d.u))l.push({uid:d.u,name:d.n});LW('mutes',l)}}
+  else if(a==='unmute'){if(cOn())await rpc('admin_unmute',{u:d.u});else LW('mutes',LS('mutes',[]).filter(m=>m.uid!==d.u))}
+  else if(a==='ban')await banEmail(d.e);else if(a==='unban')await unbanEmail(d.e);else if(a==='unbanh')await rpc('admin_unban',{h:d.h});
+  else if(a==='delacc'){if(!confirm('Delete the account '+d.e+' and all its data on this device?'))return;const acc=ACC();delete acc[d.e];localStorage.setItem(K+'acc',JSON.stringify(acc));localStorage.removeItem(K+':'+d.e);localStorage.removeItem(K+':'+d.e+'t')}
+  else if(a==='pw'){const p=prompt('New password for '+d.e+' (8+ characters)');if(!p)return;if(p.length<8)return alert('Too short.');const acc=ACC(),salt=Math.random().toString(36).slice(2);acc[d.e].salt=salt;acc[d.e].hash=await hash(p,salt);localStorage.setItem(K+'acc',JSON.stringify(acc));alert('Password updated.')}
+ }catch(x){alert('That did not work. Check the admin SQL has been run and the passcode matches.')}
+ admRender()};
+$('admRef').onclick=admRender;$('admOut').onclick=()=>{sessionStorage.removeItem('stAdm');location.reload()};
+$('admBanB').onclick=async()=>{const e=$('admEm').value.trim().toLowerCase();if(!e)return;try{await banEmail(e)}catch(x){alert('Could not save the ban to the shared database.')}$('admEm').value='';admRender()};
+$('admClear').onclick=async()=>{if(!confirm('Delete every chat message?'))return;try{if(cOn())await rpc('admin_clear_chat',{});else localStorage.removeItem(K+'chatlocal')}catch(x){alert('That did not work.')}admRender()};
+/* achievements */
+function ach(){const tot=S.sessions.reduce((a,x)=>a+x.min,0)/60,days=new Set(S.sessions.map(x=>x.date)).size,n=S.sessions.length,long=Math.max(0,...S.sessions.map(x=>x.min)),subs=new Set(S.sessions.map(x=>x.subject)).size,st=streak();
+ if(st>(S.best||0)){S.best=st;save()}const best=Math.max(S.best||0,st);
+ const G=[['Hours studied',tot,'h',[[1,'🌱','First Hour'],[5,'📘','Getting Going'],[10,'🔥','On a Roll'],[25,'⭐','Rising Star'],[50,'🏅','Half Century'],[100,'🏆','Centurion'],[250,'👑','HSC Legend'],[500,'🚀','Unstoppable']]],
+ ['Streaks',best,' days',[[3,'🔥','3 in a Row'],[7,'📅','Full Week'],[14,'💪','Fortnight Fighter'],[30,'🌙','Month of Mastery']]],
+ ['Sessions logged',n,' sessions',[[1,'✅','First Session'],[10,'📝','Ten Down'],[50,'📚','Fifty Strong'],[100,'💯','Hundred Club']]],
+ ['Focus (longest single session)',long,' min',[[60,'⏱️','Deep Focus'],[120,'🧠','Marathon'],[180,'⚡','Ultra Focus']]],
+ ['Consistency (days with a session)',days,' days',[[5,'🌱','Five Days'],[20,'🌿','Twenty Days'],[50,'🌳','Fifty Days']]],
+ ['Variety',subs,' subjects',[[3,'🎯','All-rounder'],[5,'🎓','Renaissance']]]];
+ let u=0,t=0;const f=v=>Number.isInteger(v)?v:v.toFixed(1);
+ $('ach').innerHTML=G.map(([name,v,unit,L])=>`<div class="mute" style="margin:12px 0 6px">${name}</div><div class="bg">`+L.map(([g,ic,nm])=>{const ok=v>=g;t++;if(ok)u++;
+  return `<div class="bd ${ok?'u':'l'}"><div class="ic">${ic}</div><b>${nm}</b><div class="mute">${ok?'Unlocked ✓':f(v)+' / '+g+unit}</div>${ok?'':`<div class="bar"><i style="width:${Math.min(100,v/g*100)}%"></i></div>`}</div>`}).join('')+'</div>').join('');
+ $('achCnt').textContent=u+' of '+t+' unlocked'}
+/* chat */
+const CHAT={url:'',key:''}; /* paste your Supabase Project URL and anon public key between the quotes */
+const cOn=()=>!!(CHAT.url&&CHAT.key);let cTimer=null;
+const cH=()=>({apikey:CHAT.key,Authorization:'Bearer '+CHAT.key,'Content-Type':'application/json'});
+let RX=[];
+const LR=()=>{try{return JSON.parse(localStorage.getItem(K+'reactlocal'))||[]}catch(e){return[]}};
+function rxHtml(id){const g={};RX.filter(r=>String(r.message_id)===String(id)).forEach(r=>{(g[r.emoji]=g[r.emoji]||{n:0,me:false}).n++;if(r.uid===S.cid)g[r.emoji].me=true});
+ return '<div class="rx">'+Object.entries(g).map(([e,v])=>`<button class="${v.me?'on':''}" data-r="${id}" data-e="${esc(e)}">${esc(e)} ${v.n}</button>`).join('')+`<button data-add="${id}" title="Add reaction">＋</button></div>`}
+const LC=()=>{try{return JSON.parse(localStorage.getItem(K+'chatlocal'))||[]}catch(e){return[]}};
+async function chatLoad(){const box=$('cMsg');try{let m;if(cOn()){const r=await fetch(CHAT.url+'/rest/v1/messages?select=id,name,uid,body,created_at&order=created_at.desc&limit=100',{headers:cH()});if(!r.ok)throw 0;m=(await r.json()).reverse();RX=await(await fetch(CHAT.url+'/rest/v1/reactions?select=message_id,uid,emoji&limit=5000',{headers:cH()})).json();if(!Array.isArray(RX))RX=[]}else{m=LC();RX=LR()}const near=box.scrollHeight-box.scrollTop-box.clientHeight<80;
+ box.innerHTML=m.map(x=>`<div class="msg ${x.uid===S.cid?'me':''}"><small>${esc(x.name)} · ${new Date(x.created_at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</small>${esc(x.body)}${rxHtml(x.id)}</div>`).join('')||'<p class="mute">No messages yet. Say hi!</p>';
+ if(near)box.scrollTop=box.scrollHeight}catch(e){box.innerHTML='<p class="mute">Could not reach the chat. Check the URL and key.</p>'}}
+async function chatSend(){const t=$('cIn').value.trim();if(!t)return;if(!S.cid){S.cid=uid();save()}if(LS('mutes',[]).some(m=>m.uid===S.cid)){$('cIn').value='';alert('You have been muted by an admin and cannot send messages.');return}$('cIn').value='';
+ try{if(!cOn()){const l=LC();l.push({id:uid(),name:S.name||'Student',uid:S.cid,body:t.slice(0,500),created_at:new Date().toISOString()});localStorage.setItem(K+'chatlocal',JSON.stringify(l.slice(-100)))}else if(!(await fetch(CHAT.url+'/rest/v1/messages',{method:'POST',headers:{...cH(),Prefer:'return=minimal'},body:JSON.stringify({name:S.name||'Student',uid:S.cid,body:t.slice(0,500)})})).ok)alert('Message not sent. You may have been muted by an admin.')}catch(e){}chatLoad()}
+$('cSend').onclick=chatSend;
+let pickFor=null;
+async function chatReact(id,emoji){if(!S.cid){S.cid=uid();save()}const same=r=>String(r.message_id)===String(id)&&r.uid===S.cid&&r.emoji===emoji,has=RX.some(same);
+ try{if(!cOn()){const l=LR();localStorage.setItem(K+'reactlocal',JSON.stringify(has?l.filter(r=>!same(r)):[...l,{message_id:id,uid:S.cid,emoji}]))}
+ else if(has)await fetch(CHAT.url+`/rest/v1/reactions?message_id=eq.${id}&uid=eq.${S.cid}&emoji=eq.${encodeURIComponent(emoji)}`,{method:'DELETE',headers:cH()});
+ else await fetch(CHAT.url+'/rest/v1/reactions',{method:'POST',headers:{...cH(),Prefer:'return=minimal'},body:JSON.stringify({message_id:id,uid:S.cid,emoji})})}catch(e){}await chatLoad()}
+const graphemes=s=>window.Intl&&Intl.Segmenter?[...new Intl.Segmenter('en',{granularity:'grapheme'}).segment(s)].map(x=>x.segment):[...s];
+const isEmo=g=>/\p{Extended_Pictographic}|\p{Regional_Indicator}|\u20E3/u.test(g);
+$('eQuick').innerHTML=graphemes('👍❤️😂😮😢🙏🔥🎉👏💯😍🤔😎🥳😭🤣✅❌💪📚✍️🧠⭐🚀😴☕🙌👀😅🤝💀🫡🥹').map(e=>`<button data-q="${e}" style="padding:2px 6px">${e}</button>`).join('');
+$('cMsg').onclick=e=>{const r=e.target.closest('[data-r]'),a=e.target.closest('[data-add]');
+ if(r)chatReact(r.dataset.r,r.dataset.e);else if(a){pickFor=a.dataset.add;openPick(a)}};
+$('eQuick').onclick=e=>{const b=e.target.closest('[data-q]');if(b&&pickFor!==null){chatReact(pickFor,b.dataset.q);$('ePick').classList.add('hide')}};
+$('eX').onclick=()=>$('ePick').classList.add('hide');
+$('eAdd').onclick=async()=>{const set=[...new Set(graphemes($('eIn').value).filter(isEmo))];if(!set.length||pickFor===null){$('eIn').value='';return}
+ $('eIn').value='';$('ePick').classList.add('hide');for(const e of set)await chatReact(pickFor,e)};
+$('eIn').onkeydown=e=>{if(e.key==='Enter')$('eAdd').click()};
+$('eQuick').innerHTML=graphemes('🥴💪🥹😍🦗👍❤️😂🔥💀🤨👀🎉😭🫡🐐').map(e=>`<button data-q="${e}">${e}</button>`).join('');
+function openPick(btn){const box=$('cBox'),p=$('ePick');$('eFull').classList.add('hide');p.classList.remove('hide');
+ const bb=box.getBoundingClientRect(),r=btn.getBoundingClientRect(),w=p.offsetWidth,h=p.offsetHeight;
+ let left=Math.max(8,Math.min(r.left-bb.left-8,bb.width-w-8)),top=r.top-bb.top-h-8;if(top<8)top=r.bottom-bb.top+8;
+ p.style.left=left+'px';p.style.top=top+'px'}
+$('eMore').onclick=()=>{const p=$('ePick'),f=$('eFull');f.style.left=p.style.left;f.style.top=p.style.top;p.classList.add('hide');f.classList.remove('hide');$('eIn').focus()};
+$('eX').onclick=()=>$('eFull').classList.add('hide');
+const ea=$('eAdd').onclick;$('eAdd').onclick=()=>{$('eFull').classList.add('hide');return ea()};
+document.addEventListener('mousedown',e=>{if(!e.target.closest('#ePick,#eFull,[data-add]')){$('ePick').classList.add('hide');$('eFull').classList.add('hide')}});$('cIn').onkeydown=e=>{if(e.key==='Enter')chatSend()};
+function chatOpen(){$('cSetup').classList.toggle('hide',cOn());$('cBox').classList.remove('hide');chatStop();chatLoad();if(cOn())cTimer=setInterval(chatLoad,4000)}
+function chatStop(){clearInterval(cTimer)}
+/* onboarding */
+$('oAdd').onclick=()=>{const n=$('oName').value.trim();if(!n)return;if(!S.subjects.some(s=>s.name.toLowerCase()===n.toLowerCase()))S.subjects.push({id:uid(),name:n,exam:'',areas:['General']});$('oName').value='';save();render()};
+$('oGo').onclick=()=>{if(!S.subjects.length)return alert('Pick at least one subject to continue.');S.onboarded=true;save();$('onb').classList.add('hide');$('app').classList.remove('hide');go('today')};
+/* auth */
+const ACC=()=>{try{return JSON.parse(localStorage.getItem(K+'acc'))||{}}catch(e){return{}}};
+const hash=async(p,salt)=>{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(salt+p));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')};
+let mode='in';const err=m=>$('aErr').textContent=m||'';
+document.querySelectorAll('#aSeg button').forEach(b=>b.onclick=()=>{mode=b.dataset.m;err();
+ document.querySelectorAll('#aSeg button').forEach(x=>x.classList.toggle('on',x===b));
+ $('aName').classList.toggle('hide',mode==='in');$('aPw2').classList.toggle('hide',mode==='in');
+ $('aGo').textContent=mode==='in'?'Sign in':'Create account';$('aPw').autocomplete=mode==='in'?'current-password':'new-password'});
+function enter(email){U=email;try{localStorage.setItem(K+'sess',email)}catch(e){}loadUser();
+ const a=ACC()[email];if(a&&!S.name){S.name=a.name;save()}
+ $('auth').classList.add('hide');applyTheme();
+ if(!S.onboarded){if(!S.sessions.length&&S.subjects.length===1&&S.subjects[0].id==='s1')S.subjects=[];$('onb').classList.remove('hide');$('app').classList.add('hide');render()}
+ else{$('onb').classList.add('hide');$('app').classList.remove('hide');go('today')}}
+$('aGo').onclick=async()=>{err();const email=$('aEmail').value.trim().toLowerCase(),pw=$('aPw').value,acc=ACC();
+ if(!/^\S+@\S+\.\S+$/.test(email))return err('Enter a valid email.');if(await isBanned(email))return err('This account has been banned. Contact your admin.');
+ if(mode==='up'){const name=$('aName').value.trim();
+  if(!name)return err('Enter your name.');if(pw.length<8)return err('Password must be at least 8 characters.');
+  if(pw!==$('aPw2').value)return err('Passwords do not match.');if(acc[email])return err('That email already has an account. Sign in instead.');
+  const salt=Math.random().toString(36).slice(2);acc[email]={name,salt,hash:await hash(pw,salt)};
+  try{localStorage.setItem(K+'acc',JSON.stringify(acc))}catch(e){return err('Could not save the account in this browser.')}
+  enter(email)}
+ else{const a=acc[email];if(!a||a.hash!==await hash(pw,a.salt))return err('Email or password is incorrect.');enter(email)}};
+document.querySelectorAll('#auth input').forEach(i=>i.onkeydown=e=>{if(e.key==='Enter')$('aGo').click()});
+$('out').onclick=()=>{sessionStorage.removeItem('stAdm');isAdmin=false;document.body.classList.remove('adm');save();try{localStorage.removeItem(K+'sess')}catch(e){}U=null;S=JSON.parse(JSON.stringify(DEF));
+ $('aPw').value='';$('aPw2').value='';$('app').classList.add('hide');$('onb').classList.add('hide');$('auth').classList.remove('hide')};
+try{const th=localStorage.getItem(K+'theme');if(th&&th!=='auto')document.documentElement.setAttribute('data-theme',th);
+ boot()}catch(e){}
+</script>
+</body>
+</html>
